@@ -14,18 +14,41 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = true;
+(function () {
+  'use strict';
 
-function TorrentHRPosterColumn() {
-  if (DEBUG) console.log('TorrentHRPosterColumn()');
-}
+  var $ = window.jQuery;
 
-TorrentHRPosterColumn.prototype.init = function () {
-  if (DEBUG) console.log('TorrentHRPosterColumn.init()');
-};
+  var DEBUG = true;
 
-var posterColumn = new TorrentHRPosterColumn();
+  function TorrentHRPosterColumn() {
+    if (DEBUG) console.log('TorrentHRPosterColumn()');
+  }
 
-$(document).ready(function () {
-  posterColumn.init();
-});
+  TorrentHRPosterColumn.prototype.init = function () {
+    if (DEBUG) console.log('TorrentHRPosterColumn.init()');
+
+    const tr_records = $("tr[id^=record]");
+    const th = $(tr_records).siblings().first();
+    const tbody = $(th).parent();
+    const table = $(tbody).parent();
+    // console.log('table', table);
+
+    const td_poster = '<td class="colhead" align="center">Poster</td>';
+    if (table) {
+      th.prepend(td_poster);
+      var i = 0;
+      tr_records.each(function () {
+        var tr = $(this);
+        tr.prepend('<td class="colhead" align="center">' + (i++) + '</td>');
+      });
+    }
+
+  };
+
+  var posterColumn = new TorrentHRPosterColumn();
+
+  $(document).ready(function () {
+    posterColumn.init();
+  });
+})();
