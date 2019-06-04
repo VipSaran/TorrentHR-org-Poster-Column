@@ -6,7 +6,7 @@
 // @version       1.0.0
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
-// @grant         GM_getResourceURL
+// @grant         GM_xmlhttpRequest
 // @include       https://www.torrenthr.org/browse.php*
 // @include       http://www.torrenthr.org/browse.php*
 // @match         https://www.torrenthr.org/browse.php*
@@ -38,15 +38,33 @@
     if (table) {
       th.prepend('<td class="colhead" align="center">Poster</td>');
 
-      var i = 0;
       tr_records.each(function () {
         var tr = $(this);
+        var id = $(this)[0].id.replace('record-', '');
         if (DEBUG) console.log('tr', tr);
-        
-        tr.prepend('<td class="colhead" align="center">' + (i++) + '</td>');
+        if (DEBUG) console.log('id', id);
 
-        // get torrent details with URL='https://www.torrenthr.org/details.php?id=' + row.id.replace('record-', '')
-        // there find the img tag with $('#ka1').children().first() and use it instead of counter
+        var URL = 'https://www.torrenthr.org/details.php?id=' + id;
+        GM_xmlhttpRequest({
+          method: 'GET',
+          url: URL,
+          onload: function (response) {
+            var data = response.responseText;
+            // if (DEBUG) console.log('onload:', data);
+
+            var html = $.parseHTML(data);
+            var img = $(html).find('#ka1').first().children().first();
+            // if (DEBUG) console.log('img', img);
+            if (img.length) {
+              tr.prepend('<td align="center" style="padding:0"><img src="' + $(img)[0].src + '"></img></td>');
+            } else {
+              tr.prepend('<td align="center"></td>');
+            }
+          },
+          onerror: function (response) {
+            if (DEBUG) console.log('onerror:', response);
+          }
+        });
       });
     }
 
