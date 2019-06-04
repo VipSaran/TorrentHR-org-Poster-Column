@@ -40,6 +40,7 @@
 
       tr_records.each(function () {
         var tr = $(this);
+        $(tr).find('td a b').css('font-size', '1.2em').css('word-wrap', 'break-word');
         var id = $(this)[0].id.replace('record-', '');
         if (DEBUG) console.log('tr', tr);
         if (DEBUG) console.log('id', id);
