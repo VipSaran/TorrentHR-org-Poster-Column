@@ -32,15 +32,21 @@
     const th = $(tr_records).siblings().first();
     const tbody = $(th).parent();
     const table = $(tbody).parent();
-    // console.log('table', table);
 
-    const td_poster = '<td class="colhead" align="center">Poster</td>';
+    if (DEBUG) console.log('table', table);
+
     if (table) {
-      th.prepend(td_poster);
+      th.prepend('<td class="colhead" align="center">Poster</td>');
+
       var i = 0;
       tr_records.each(function () {
         var tr = $(this);
+        if (DEBUG) console.log('tr', tr);
+        
         tr.prepend('<td class="colhead" align="center">' + (i++) + '</td>');
+
+        // get torrent details with URL='https://www.torrenthr.org/details.php?id=' + row.id.replace('record-', '')
+        // there find the img tag with $('#ka1').children().first() and use it instead of counter
       });
     }
 
