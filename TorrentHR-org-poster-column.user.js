@@ -38,12 +38,14 @@
     if (table) {
       th.prepend('<td class="colhead" align="center">Poster</td>');
 
+      // $('#wrapper').css('width', '100%');
+
       tr_records.each(function () {
         var tr = $(this);
         $(tr).find('td a b').css('font-size', '1.2em').css('word-wrap', 'break-word');
         var id = $(this)[0].id.replace('record-', '');
-        if (DEBUG) console.log('tr', tr);
-        if (DEBUG) console.log('id', id);
+        // if (DEBUG) console.log('tr', tr);
+        // if (DEBUG) console.log('id', id);
 
         var URL = 'https://www.torrenthr.org/details.php?id=' + id;
         GM_xmlhttpRequest({
