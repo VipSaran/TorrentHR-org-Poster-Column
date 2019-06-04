@@ -13,3 +13,19 @@
 // @match         http://www.torrenthr.org/browse.php*
 // @run-at        document-end
 // ==/UserScript==
+
+var DEBUG = true;
+
+function TorrentHRPosterColumn() {
+  if (DEBUG) console.log('TorrentHRPosterColumn()');
+}
+
+TorrentHRPosterColumn.prototype.init = function () {
+  if (DEBUG) console.log('TorrentHRPosterColumn.init()');
+};
+
+var posterColumn = new TorrentHRPosterColumn();
+
+$(document).ready(function () {
+  posterColumn.init();
+});
