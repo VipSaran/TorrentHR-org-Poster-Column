@@ -34,6 +34,11 @@ Once your browser is equipped with appropriate extension, simply open [this link
 
 ## Changelog
 
+
+1.0.1
+
+ - reuse existing Catergory column for poster images
+
 1.0.0
 
  - browse torrents page prepended with the Poster column
