@@ -14,6 +14,15 @@
 
 Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org torrent browsing table with a movie poster. Avaialability based on IMDB data for the torrent.
 
+**Before:**
+
+![ScreenShot](thr_old.png?raw=true "Default view")
+
+**After:**
+
+![ScreenShot](thr_new.png?raw=true "View enhanced with poster images")
+
+
 ## Prerequisites
 
 To be able to employ the UserScript, your browser needs to have corresponding extensions installed:
@@ -29,11 +38,10 @@ Once your browser is equipped with appropriate extension, simply open [this link
 
 ## Limitations
 
- - attempts to display the poster even for categories not supporting IMDB data
+ - currently parses the torrent page for the IMDB poster even for categories not supporting IMDB data
 
 
 ## Changelog
-
 
 1.0.1
 
