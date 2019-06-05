@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.0.1
+// @version       1.0.2
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
 // @grant         GM_xmlhttpRequest
@@ -37,6 +37,7 @@
       if (DEBUG) console.log('table', table);
 
       if (tr_records.length) {
+        addGlobalStyle('td.colhead { white-space: nowrap; }');
         addGlobalStyle('td.poster { width: 181px; height: 268px; vertical-align: bottom; text-align-last: right; padding: 0; }');
         addGlobalStyle('img.poster_cat { box-shadow: -3px -3px 5px rgba(0,0,0,0.7); border-radius: 10px; margin: 1px; }');
       }
