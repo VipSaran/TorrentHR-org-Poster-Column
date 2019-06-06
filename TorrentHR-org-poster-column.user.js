@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.0.2
+// @version       1.0.3
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
 // @grant         GM_xmlhttpRequest
@@ -19,7 +19,7 @@
 
   var $ = window.jQuery;
 
-  var DEBUG = true;
+  var DEBUG = false;
 
   function TorrentHRPosterColumn() {
     if (DEBUG) console.log('TorrentHRPosterColumn()');
