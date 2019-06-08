@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.0.3
+// @version       1.1.0
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
 // @grant         GM_xmlhttpRequest
@@ -19,7 +19,7 @@
 
   var $ = window.jQuery;
 
-  var DEBUG = false;
+  var DEBUG = true;
 
   function TorrentHRPosterColumn() {
     if (DEBUG) console.log('TorrentHRPosterColumn()');
@@ -45,7 +45,7 @@
       tr_records.each(function () {
         var tr = $(this);
         // if (DEBUG) console.log('tr', tr);
-        var id = $(this)[0].id.replace('record-', '');
+        var detailsId = $(this)[0].id.replace('record-', '');
         // if (DEBUG) console.log('id', id);
 
         var cat_td = tr.children().first();
@@ -55,36 +55,48 @@
 
         // TODO skip requests for non-IMDB categories
 
-        var URL = 'https://www.torrenthr.org/details.php?id=' + id;
-        GM_xmlhttpRequest({
-          method: 'GET',
-          url: URL,
-          onload: function (response) {
-            var data = response.responseText;
-            // if (DEBUG) console.log('onload:', data);
+        // skip parsing of details page if detailsId-imageId mapping is stored in browser cache
+        var imageURL = window.localStorage.getItem(detailsId);
+        if (imageURL !== null) {
+          if (DEBUG) console.log('using cached mapping', detailsId, imageURL);
+          addImageBackgroundToTD(cat_td, imageURL);
+        } else {
+          var URL = 'https://www.torrenthr.org/details.php?id=' + detailsId;
+          GM_xmlhttpRequest({
+            method: 'GET',
+            url: URL,
+            onload: function (response) {
+              var data = response.responseText;
+              // if (DEBUG) console.log('onload:', data);
 
-            var html = $.parseHTML(data);
-            var imdb_img = $(html).find('#ka1').first().children().first();
-            // if (DEBUG) console.log('imdb_img', imdb_img);
-            if (imdb_img.length) {
-              cat_td.addClass('poster');
-              cat_td.css('background-image', 'url(' + $(imdb_img)[0].src + ')');
-
-              var cat_img = cat_td.find('img').first();
-              cat_img.addClass('poster_cat');
-            } else {
+              var html = $.parseHTML(data);
+              var imdb_img = $(html).find('#ka1').first().children().first();
+              // if (DEBUG) console.log('imdb_img', imdb_img);
+              if (imdb_img.length) {
+                imageURL = $(imdb_img)[0].src;
+                addImageBackgroundToTD(cat_td, imageURL);
+                window.localStorage.setItem(detailsId, imageURL);
+              } else {
+                cat_td.css('text-align-last', 'right');
+              }
+            },
+            onerror: function (response) {
+              if (DEBUG) console.log('onerror:', response);
               cat_td.css('text-align-last', 'right');
             }
-          },
-          onerror: function (response) {
-            if (DEBUG) console.log('onerror:', response);
-            cat_td.css('text-align-last', 'right');
-          }
-        });
+          });
+        }
       });
     }
-
   };
+
+  function addImageBackgroundToTD(td, imageURL) {
+    td.addClass('poster');
+    td.css('background-image', 'url(' + imageURL + ')');
+    td.find('img').first().addClass('poster_cat');
+
+    return td;
+  }
 
   function addGlobalStyle(css) {
     var head, style;
