@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.1.0
+// @version       1.2.0
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
 // @grant         GM_xmlhttpRequest
@@ -20,6 +20,19 @@
   var $ = window.jQuery;
 
   var DEBUG = false;
+
+  var thrImdbCategories = [
+    { Cat: 4, Name: 'Filmovi/SD' },
+    { Cat: 7, Name: 'Serije/SD' },
+    { Cat: 11, Name: 'Koncerti' },
+    { Cat: 12, Name: 'Dokumentarni' },
+    { Cat: 14, Name: 'Filmovi/DVD' },
+    { Cat: 17, Name: 'Filmovi/HD' },
+    { Cat: 18, Name: 'Crtani' },
+    { Cat: 31, Name: 'Anime' },
+    { Cat: 34, Name: 'Serije/HD' },
+    { Cat: 40, Name: 'Filmovi/BD' },
+  ];
 
   function TorrentHRPosterColumn() {
     if (DEBUG) console.log('TorrentHRPosterColumn()');
@@ -53,7 +66,21 @@
         // some (optional) styling for torrent name
         $(tr).find('td a b').css('font-size', '1.1em').css('word-wrap', 'break-word');
 
-        // TODO skip requests for non-IMDB categories
+        // skip requests for non-IMDB categories
+        try {
+          var cat_href = $(cat_td).find('a').first().attr('href');
+          // if (DEBUG) console.log('cat_href', cat_href);
+          
+          var cat = parseInt(cat_href.substring(cat_href.indexOf('=') + 1));
+          // if (DEBUG) console.log('cat', cat);
+          if (thrImdbCategories.filter(function (e) { return e.Cat === cat; }).length == 0) {
+            if (DEBUG) console.log('thrImdbCategories does not support:', cat);
+            // the current category does not use IMDB poster images
+            return;
+          }
+        } catch (e) {
+          if (DEBUG) console.error('error parsing cat:', e);
+        }
 
         // skip parsing of details page if detailsId-imageId mapping is stored in browser cache
         var imageURL = window.localStorage.getItem(detailsId);
@@ -81,7 +108,7 @@
               }
             },
             onerror: function (response) {
-              if (DEBUG) console.log('onerror:', response);
+              if (DEBUG) console.error('onerror:', response);
               cat_td.css('text-align-last', 'right');
             }
           });
