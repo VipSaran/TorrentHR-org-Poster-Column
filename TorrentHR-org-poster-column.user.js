@@ -19,7 +19,7 @@
 
   var $ = window.jQuery;
 
-  var DEBUG = true;
+  var DEBUG = false;
 
   function TorrentHRPosterColumn() {
     if (DEBUG) console.log('TorrentHRPosterColumn()');

@@ -43,6 +43,10 @@ Once your browser is equipped with appropriate extension, simply open [this link
 
 ## Changelog
 
+1.1.0
+
+ - caching of the detailsId-imageId mapping in browser storage (to reduce unneccessary subsequent loading and parsing of the same details page)
+
 1.0.1
 
  - reuse existing Catergory column for poster images
