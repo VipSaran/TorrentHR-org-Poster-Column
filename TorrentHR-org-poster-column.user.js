@@ -3,10 +3,10 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.2.0
+// @version       1.2.1
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
-// @grant         GM_xmlhttpRequest
+// @grant         GM.xmlHttpRequest
 // @include       https://www.torrenthr.org/browse.php*
 // @include       http://www.torrenthr.org/browse.php*
 // @match         https://www.torrenthr.org/browse.php*
@@ -70,7 +70,7 @@
         try {
           var cat_href = $(cat_td).find('a').first().attr('href');
           // if (DEBUG) console.log('cat_href', cat_href);
-          
+
           var cat = parseInt(cat_href.substring(cat_href.indexOf('=') + 1));
           // if (DEBUG) console.log('cat', cat);
           if (thrImdbCategories.filter(function (e) { return e.Cat === cat; }).length == 0) {
@@ -89,7 +89,7 @@
           addImageBackgroundToTD(cat_td, imageURL);
         } else {
           var URL = 'https://www.torrenthr.org/details.php?id=' + detailsId;
-          GM_xmlhttpRequest({
+          GM.xmlHttpRequest({
             method: 'GET',
             url: URL,
             onload: function (response) {
