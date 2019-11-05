@@ -33,7 +33,7 @@ To be able to employ the UserScript, your browser needs to have corresponding ex
 
 ## Installation
 
-Once your browser is equipped with appropriate extension, simply open [this link](https://github.com/VipSaran/TorrentHR-org-Poster-Column/blob/master/TorrentHR-org-poster-column.user.js). The extension should recognize the script and offer you to install it.
+Once your browser is equipped with appropriate extension, simply open [this link](https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js). The extension should recognize the script and offer you to install it.
 
 
 ## Limitations
