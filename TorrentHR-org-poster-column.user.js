@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for extending TorrentHR.org Torrents page with additional poster column
 // @namespace     http://github.com/VipSaran/TorrentHR-org-Poster-Column
 // @updateURL     https://github.com/VipSaran/TorrentHR-org-Poster-Column/raw/master/TorrentHR-org-poster-column.user.js
-// @version       1.2.1
+// @version       1.3
 // @author        VipSaran
 // @require       http://code.jquery.com/jquery-3.4.1.min.js
 // @grant         GM.xmlHttpRequest
@@ -19,7 +19,7 @@
 
   var $ = window.jQuery;
 
-  var DEBUG = false;
+  var DEBUG = true;
 
   var thrImdbCategories = [
     { Cat: 4, Name: 'Filmovi/SD' },
@@ -82,7 +82,11 @@
           if (DEBUG) console.error('error parsing cat:', e);
         }
 
+        // TODO save image URL as "img_" + detailsId
+        // TODO save rating as "r_" + detailsId
+
         // skip parsing of details page if detailsId-imageId mapping is stored in browser cache
+        // var imageURL = null;
         var imageURL = window.localStorage.getItem(detailsId);
         if (imageURL !== null) {
           if (DEBUG) console.log('using cached mapping', detailsId, imageURL);
@@ -97,14 +101,49 @@
               // if (DEBUG) console.log('onload:', data);
 
               var html = $.parseHTML(data);
-              var imdb_img = $(html).find('#ka1').first().children().first();
+              var imdb_div = $(html).find('#ka1').first().children();
+              // if (DEBUG) console.log('imdb_div', imdb_div);
+
+              var imdb_img = $(imdb_div).first();
               // if (DEBUG) console.log('imdb_img', imdb_img);
+
+              var imdb_url = $(imdb_div).last();
+              // if (DEBUG) console.log('imdb_url', imdb_url);
+
               if (imdb_img.length) {
                 imageURL = $(imdb_img)[0].src;
                 addImageBackgroundToTD(cat_td, imageURL);
                 window.localStorage.setItem(detailsId, imageURL);
               } else {
                 cat_td.css('text-align-last', 'right');
+              }
+              
+              if (imdb_url.length) {
+                var imdb_url_href = $(imdb_url)[0].href;
+                var tokens = imdb_url_href.split('/');
+                if (tokens.length == 6) {
+                  var omdbapi_url = "http://www.omdbapi.com/?apikey=4b6651c2&i=" + tokens[4];
+                  // if (DEBUG) console.log('omdbapi_url', omdbapi_url);
+
+                  GM.xmlHttpRequest({
+                    method: 'GET',
+                    url: omdbapi_url,
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    onload: function (response) {
+                      var data = response.responseText;
+                      // if (DEBUG) console.log('onload omdbapi_url:', data);
+                      if (data) {
+                        var rating = JSON.parse(data).imdbRating;
+                        if (DEBUG) console.log('imdbRating:', rating);
+                      }
+                    },
+                    onerror: function (response) {
+                      if (DEBUG) console.error('onerror omdbapi_url:', response);
+                    }
+                  });
+                }
               }
             },
             onerror: function (response) {
